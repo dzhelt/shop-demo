@@ -1,0 +1,148 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+skinparam linetype ortho
+skinparam layout NewLine
+
+entity "Users" {
+  *id : int
+  --
+  role_id: int (FK)
+  first_name : varchar(255)
+  last_name : varchar(255)
+  email : varchar(255)
+  password : varchar(255)
+  created_at : timestamp
+}
+
+entity "Roles" {
+  *id : int
+  --
+  name: varchar(255)
+  created_at : timestamp
+}
+
+entity "Products" {
+  *id : int
+  --
+  category_id: int (FK)
+  name : varchar
+  description : text
+  popularity: decimal
+  price : decimal
+  stock : int
+  image_url : varchar(255)
+  created_at : timestamp
+  updated_at : timestamp
+}
+
+entity "Categories" {
+  *id : int
+  --
+  name : varchar(255)
+  created_at : timestamp
+}
+
+entity "Cart" {
+  *id : int
+  --
+  user_id : int (FK)
+  session_id : varchar (UNIQUE)
+  created_at : timestamp
+}
+
+entity "CartItems" {
+  *id : int
+  --
+  cart_id : int (FK)
+  product_id : int (FK)
+  quantity : int
+  created_at : timestamp
+  updated_at : timestamp
+}
+
+entity "Orders" {
+  *id : int
+  --
+  user_id : int (FK)
+  address_id : int (FK)
+  total_amount : decimal
+  status : varchar(255)
+  updated_at : timestamp
+  created_at : timestamp
+}
+
+entity "Addresses" {
+  *id : int
+  --
+  user_id : int (FK)
+  street : text
+  city : varchar(255)
+  country : varchar(255)
+  postal_code : varchar(255)
+  created_at : timestamp
+  updated_at : timestamp
+}
+
+entity "OrderItems" {
+  *id : int
+  --
+  order_id : int (FK)
+  product_id : int (FK)
+  quantity : int
+  price_at_purchase : decimal
+  discount : decimal
+  tax : decimal
+  created_at : timestamp
+  updated_at : timestamp
+}
+
+entity "OrderStatusHistory" {
+  *id : int
+  --
+  order_id : int (FK)
+  status : varchar(255)
+  created_at: timestamp
+  created_by: int (FK)
+}
+
+entity "Payments" {
+  *id : int
+  --
+  order_id : int (FK)
+  total_amount : decimal
+  status : varchar(255)
+  transaction_id : varchar(255)
+  payment_method : varchar(255)
+  created_at : timestamp
+}
+
+' Relationships
+Users --o{ Orders
+Users -- Cart
+Users --o{ Addresses
+Roles --o{ Users
+Cart --o{ CartItems
+Orders --o{ OrderItems
+Products --o{ OrderItems
+Categories --o{ Products
+Products --o{ CartItems
+Orders --o{ Payments
+Orders --o{ OrderStatusHistory
+Orders }--Addresses
+
+' Location on the diagram
+Users -[hidden]-> Orders
+Users -[hidden]-> Cart
+Orders -[hidden]-> Payments
+Cart -[hidden]-> CartItems
+Products -[hidden]-> CartItems
+Products -[hidden]-> OrderItems
+Orders -[hidden]-> OrderItems
+Orders -[hidden]-> OrderStatusHistory
+OrderStatusHistory -[hidden]-> Users
+Orders -[hidden]-> Addresses
+Users -[hidden]-> Addresses
+
+
+@enduml
