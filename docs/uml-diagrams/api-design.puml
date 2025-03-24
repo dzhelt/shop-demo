@@ -1,0 +1,119 @@
+@startuml
+skinparam componentStyle rectangle
+skinparam shadowing false
+skinparam linetype ortho
+skinparam defaultTextAlignment center
+skinparam nodesep 60
+skinparam ranksep 120
+
+' =========================
+' LAYER 1: Frontend Layer
+' =========================
+package "Client Layer" #PowderBlue {
+  [Frontend Client] as Client
+}
+
+' =========================
+' LAYER 2: API Layer
+' =========================
+package "API Layer" #MediumAquaMarine {
+  [Auth API]
+  [User API]
+  [Product API]
+  [Cart API]
+  [Order API]
+  [Payment API]
+  [Address API]
+  [Status API]
+}
+
+' =========================
+' LAYER 3: Service Layer
+' =========================
+package "Service Layer" #Moccasin {
+
+together {
+  [Auth Service]
+  [User Service]
+}
+
+together {
+  [Product Catalog Service]
+  [Order Service]
+  [Cart Service]
+}
+
+  [Payment Service]
+  [Address Service]
+  [Status Tracking Service]
+}
+
+' =========================
+' LAYER 4: REPOSITORIES
+' =========================
+package "Repository Layer" #lightSalmon {
+  [UserRepository]
+  [ProductRepository]
+  [CartRepository]
+  [OrderRepository]
+  [PaymentRepository]
+  [AddressRepository]
+  [StatusRepository]
+}
+
+' =========================
+' LAYER 5: DATABASE
+' =========================
+database "PostgreSQL DB" as DB #SkyBlue
+
+' --- Client interacts with APIs ---
+Client --> [Auth API]
+Client --> [User API]
+Client --> [Product API]
+Client --> [Cart API]
+Client --> [Order API]
+Client --> [Payment API]
+Client --> [Address API]
+Client --> [Status API]
+
+' --- APIs call internal services ---
+[Auth API] --> [Auth Service]
+[User API] --> [User Service]
+[Product API] --> [Product Catalog Service]
+[Cart API] --> [Cart Service]
+[Order API] --> [Order Service]
+[Payment API] --> [Payment Service]
+[Address API] --> [Address Service]
+[Status API] --> [Status Tracking Service]
+
+' --- Services use repositories ---
+[Auth Service] --> [UserRepository]
+[User Service] --> [UserRepository]
+[Product Catalog Service] --> [ProductRepository]
+[Cart Service] --> [CartRepository]
+[Order Service] --> [OrderRepository]
+[Payment Service] --> [PaymentRepository]
+[Address Service] --> [AddressRepository]
+[Status Tracking Service] --> [StatusRepository]
+
+' --- Repositories talk to DB ---
+[UserRepository] --> DB
+[ProductRepository] --> DB
+[CartRepository] --> DB
+[OrderRepository] --> DB
+[PaymentRepository] --> DB
+[AddressRepository] --> DB
+[StatusRepository] --> DB
+
+' --- Internal service-to-service calls ---
+[Order Service] --> [Cart Service]
+[Order Service] --> [Address Service]
+[Order Service] --> [Payment Service]
+[Order Service] --> [User Service]
+[Order Service] --> [Status Tracking Service]
+[Order Service] --> [Product Catalog Service]
+[Payment Service] --> [Order Service]
+[Status Tracking Service] --> [User Service]
+
+
+@enduml

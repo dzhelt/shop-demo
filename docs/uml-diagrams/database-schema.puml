@@ -129,7 +129,6 @@ Categories --o{ Products
 Products --o{ CartItems
 Orders --o{ Payments
 Orders --o{ OrderStatusHistory
-OrderStatusHistory }-- Users
 Orders }--Addresses
 
 ' Location on the diagram
@@ -141,6 +140,7 @@ Products -[hidden]-> CartItems
 Products -[hidden]-> OrderItems
 Orders -[hidden]-> OrderItems
 Orders -[hidden]-> OrderStatusHistory
+OrderStatusHistory -[hidden]-> Users
 Orders -[hidden]-> Addresses
 Users -[hidden]-> Addresses
 
